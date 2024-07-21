@@ -20,8 +20,7 @@ module.exports = function updateUserProfile () {
       UserModel.findByPk(loggedInUser.data.id).then((user: UserModel | null) => {
         if (user != null) {
           challengeUtils.solveIf(challenges.csrfChallenge, () => {
-            return ((req.headers.origin?.includes('://htmledit.squarefree.com')) ??
-              (new URL(req.headers.referer).hostname === 'htmledit.squarefree.com')) &&
+            return (['htmledit.squarefree.com'].includes(new URL(req.headers.origin ?? req.headers.referer).hostname)) &&
               req.body.username !== user.username
           })
           void user.update({ username: req.body.username }).then((savedUser: UserModel) => {
